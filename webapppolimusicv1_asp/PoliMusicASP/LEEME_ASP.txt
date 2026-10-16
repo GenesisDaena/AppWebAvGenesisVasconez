@@ -1,0 +1,147 @@
+=====================================================================
+  PoliMusic - Version ASP CLASICO (VBScript)
+  Migracion desde ASP.NET Web Forms (C#)
+=====================================================================
+
+Este proyecto es la MIGRACION del sitio "PoliMusic" (clon de Spotify con
+paleta marron) desde ASP.NET Web Forms a ASP Clasico con VBScript, tal
+como lo exige el laboratorio.
+
+No se reconstruyo desde cero: se reutilizo el diseno (CSS), el JavaScript
+del reproductor, los recursos multimedia y TODO el esquema SQL del
+proyecto original.
+
+---------------------------------------------------------------------
+1. COMO DESPLEGAR
+---------------------------------------------------------------------
+  a) Ejecutar en SQL Server, en este orden:
+       1. BDD_PoliMusic.sql            (esquema + datos, crea el login
+                                        usr_polimusic / Politecnica1)
+       2. Setup_GenesisVasconez.sql    (usuarios de prueba)
+
+  b) Habilitar ASP Clasico en IIS:
+       Panel de control > Programas > Activar o desactivar caracteristicas
+       de Windows > Servicios de Internet Information Server >
+       World Wide Web Services > Application Development Features > ASP
+
+  c) Desplegar:
+       - Opcion facil: clic derecho en "deploy_polimusic_asp.bat" y
+         "Ejecutar como administrador". Copia todo a
+         C:\inetpub\wwwroot\PoliMusicASP y registra la aplicacion.
+       - Opcion manual: copiar esta carpeta (PoliMusicASP) a
+         C:\inetpub\wwwroot\ y crear la aplicacion en IIS.
+
+  d) Abrir:  http://localhost/PoliMusicASP/login.asp
+
+---------------------------------------------------------------------
+2. USUARIOS DE PRUEBA   (contrasena: 12345678)
+---------------------------------------------------------------------
+   userAdmin          -> Administrador (puede hacer CRUD de todo)
+   epn.fis            -> Usuario normal
+   genesis.vasconez   -> Usuario normal
+
+   Reglas de permisos:
+     - Administrador : CRUD de usuarios, canciones, albumes, artistas
+                       y playlists.
+     - Usuario normal: reproducir canciones/albumes/artistas y
+                       consultar, crear, actualizar y eliminar SUS
+                       PROPIAS playlists.
+   La validacion de permisos se hace TAMBIEN en el servidor
+   (includes/seguridad.asp -> ExigirSesion / ExigirAdmin).
+
+---------------------------------------------------------------------
+3. ESTRUCTURA
+---------------------------------------------------------------------
+   PoliMusicASP/
+   |-- default.asp            Pantalla principal (requiere sesion)
+   |-- login.asp              Inicio de sesion
+   |-- logout.asp             Cierre de sesion
+   |-- register.asp           Registro / enrolamiento de usuarios
+   |-- songs.asp              Lista de canciones (CRUD admin)
+   |-- songedit.asp           Crear / editar cancion (admin)
+   |-- albums.asp             Listado de albumes (CRUD admin)
+   |-- albumedit.asp          Crear / editar album (admin)
+   |-- albumdetail.asp        Detalle de album + reproducir todo
+   |-- artists.asp            Listado de artistas (CRUD admin)
+   |-- artistedit.asp         Crear / editar artista (admin)
+   |-- artistdetail.asp       Detalle de artista + reproducir todo
+   |-- playlists.asp          Playlists (admin: todas / normal: las suyas)
+   |-- playlistedit.asp       Crear / editar playlist
+   |-- playlistdetail.asp     Detalle de playlist + quitar canciones
+   |-- addtoplaylist.asp      Agregar canciones a una playlist
+   |-- adminusers.asp         Gestion de usuarios (admin)
+   |-- useredit.asp           Crear / editar usuario (admin)
+   |-- incrementplays.asp     Suma reproducciones (recibe id por POST)
+   |
+   |-- includes/
+   |   |-- conexion.asp       Capa de datos (ADODB). Equivale a
+   |   |                      App_Code/DatabaseHelper.cs (40 funciones).
+   |   |-- seguridad.asp      Validacion de sesion y roles.
+   |   |-- header.asp         Cabecera + <head> + topbar (equivale a
+   |   |                      la parte superior de Site.Master).
+   |   |-- sidebar.asp        Menu lateral.
+   |   |-- footer.asp         Cierre de layout + barra del reproductor
+   |   |                      (equivale a la parte inferior de Site.Master).
+   |
+   |-- Content/Site.css       Diseno original (paleta marron) + un
+   |                          adendo de compatibilidad al final.
+   |-- Scripts/Site.js        Reproductor y navegacion (adaptado).
+   |-- SongFiles/             Canciones .mp3
+   |-- UserImages/            Fotos de usuario
+   |-- PlaylistImages/        Portadas de playlists
+   |-- AlbumImages/           Portadas de albumes
+   |-- ArtistImages/          Fotos de artistas
+   |-- BDD_PoliMusic.sql      Script de base de datos (sin cambios)
+   |-- Setup_GenesisVasconez.sql  Usuarios de prueba
+   |-- deploy_polimusic_asp.bat   Despliegue en IIS
+   |-- LEEME_ASP.txt          Este archivo
+
+---------------------------------------------------------------------
+4. EQUIVALENCIAS DE LA MIGRACION
+---------------------------------------------------------------------
+   ASP.NET Web Forms                ->   ASP Clasico
+   --------------------------------      -----------------------------
+   Site.Master                      ->   includes/header.asp +
+                                            includes/sidebar.asp +
+                                            includes/footer.asp
+   App_Code/DatabaseHelper.cs       ->   includes/conexion.asp
+   App_Code/Models.cs               ->   (no necesario: se usan los
+                                            Recordset directamente)
+   IncrementPlays.ashx              ->   incrementplays.asp (POST)
+   Web.config                       ->   eliminado (la cadena de
+                                            conexion vive en conexion.asp)
+   Global.asax                      ->   eliminado
+
+   asp:TextBox / asp:Button         ->   <input> + <form method="post">
+   asp:GridView / asp:Repeater      ->   bucles Do While Not rs.EOF
+   Session["Usuario"]               ->   Session("usuario")
+   Session["UserType"]              ->   Session("rol")   (0=USER 1=ADMIN)
+   Session["UserId"]                ->   Session("idUsuario")
+   ~/Content/Site.css               ->   Content/Site.css  (relativa)
+
+---------------------------------------------------------------------
+5. CADENA DE CONEXION
+---------------------------------------------------------------------
+   Provider=MSOLEDBSQL;Server=localhost,1433;Database=BDD_PoliMusic;
+   User Id=usr_polimusic;Password=Politecnica1;Encrypt=yes;
+   TrustServerCertificate=yes;
+
+   Esta definida en includes/conexion.asp (constante CONN_STRING).
+
+---------------------------------------------------------------------
+6. CONTROL DE CODIFICACION (UTF-8)
+---------------------------------------------------------------------
+   Todas las paginas .asp:
+     - Empiezan con  <%@ Language="VBScript" CodePage=65001 %>
+     - Definen       Response.Charset = "UTF-8"
+     - Incluyen      <meta charset="UTF-8">
+     - Estan guardadas en UTF-8 (sin BOM), por lo que se ven
+       correctamente "sesion", "contrasena", "album", etc.
+
+   Todas las rutas a CSS, JS, imagenes y MP3 son RELATIVAS, lo que
+   corrige el problema de que el CSS no se aplicaba en IIS.
+
+=====================================================================
+  Genesis Vasconez - Escuela Politecnica Nacional
+  Aplicaciones Web Avanzadas - 8vo Semestre
+=====================================================================
