@@ -1,5 +1,5 @@
 .workbuddy-ai/
+.vs/
 bin/
 obj/
-*.csproj.user
-#Web.config
+*.user
