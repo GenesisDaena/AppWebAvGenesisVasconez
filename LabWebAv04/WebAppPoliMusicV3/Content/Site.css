@@ -1,0 +1,48 @@
+﻿/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .body-content {
+        padding: 0;
+    }
+}
+
+/* =======================================================================
+   PoliMusic palette: three celeste tones
+   1) #0A5C74 deep  2) #2FA8C9 mid  3) #E4F6FB light
+   ======================================================================= */
+.pm-navbar {
+    background-color: #0A5C74 !important;
+    box-shadow: 0 6px 18px rgba(10, 92, 116, .18);
+}
+
+.pm-navbar .navbar-brand {
+    font-weight: 700;
+    letter-spacing: -.2px;
+    color: #ffffff;
+}
+
+.pm-navbar .nav-link {
+    color: rgba(255, 255, 255, .82);
+    font-size: 14px;
+    border-radius: 999px;
+    padding: 6px 14px !important;
+}
+
+.pm-navbar .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, .14);
+}
