@@ -3,3 +3,8 @@
 bin/
 obj/
 *.userpackages/ 
+packages/
+*.user
+.vs/
+bin/
+obj/

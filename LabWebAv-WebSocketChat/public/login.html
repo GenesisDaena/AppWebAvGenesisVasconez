@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPN FIS - Iniciar sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-body">
+    <form id="loginForm" class="login-card">
+        <h1>Chat WebSocket</h1>
+        <p class="login-sub">Inicia sesión para entrar al chat</p>
+        <input type="email" id="email" placeholder="Correo electrónico" required autocomplete="email">
+        <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6" autocomplete="current-password">
+        <div id="loginError" class="login-error"></div>
+        <button type="submit" id="loginBtn">Iniciar sesión</button>
+        <button type="button" id="registerBtn" class="secondary">Crear cuenta</button>
+    </form>
+    <script type="module" src="login.js"></script>
+</body>
+</html>

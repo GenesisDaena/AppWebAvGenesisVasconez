@@ -1,0 +1,7 @@
+node_modules/
+.env
+*.json.bak
+*-firebase-adminsdk-*.json
+serviceAccount*.json
+.workbuddy-ai/
+_to_delete/

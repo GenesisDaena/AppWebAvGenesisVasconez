@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPN FIS - Chat WebSocket</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Header: título, estado de conexión, contador y toggle de tema -->
+    <header class="chat-header">
+        <h1>Chat WebSocket</h1>
+        <div class="header-info">
+            <div class="status-indicator">
+                <span id="statusDot" class="status-dot"></span>
+                <span id="statusText">Desconectado</span>
+            </div>
+            <span class="user-count">👥 <span id="userCount">0</span></span>
+            <span id="userLabel" class="user-count"></span>
+            <button id="themeBtn" class="theme-btn">🌙 Oscuro</button>
+            <button id="logoutBtn" class="theme-btn">Salir</button>
+        </div>
+    </header>
+
+    <!-- Contenedor de mensajes (incluye el indicador de escritura) -->
+    <div id="messages">
+        <div id="typingIndicator" class="typing-indicator"></div>
+    </div>
+
+    <!-- Área de entrada -->
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." maxlength="500">
+        <button id="sendBtn" disabled>Enviar</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
